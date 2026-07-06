@@ -457,8 +457,11 @@ pub mod Microsoft {
             /// Authentication mode
             pub struct AuthenticationMode(pub i32);
             impl AuthenticationMode {
+                /// Always use interactive authentication flow on first authentication request, following requests may use cached result.
                 pub const Interactive: Self = Self(0i32);
+                /// Try silent authentication flow first. If failed, use interactive authentication flow.
                 pub const SilentPreferred: Self = Self(1i32);
+                /// Only use silent authentication flow. If failed, fail the authentication.
                 pub const Silent: Self = Self(2i32);
             }
             impl windows_core::TypeKind for AuthenticationMode {
@@ -1088,9 +1091,13 @@ pub mod Microsoft {
             /// The result of a comparison.
             pub struct CompareResult(pub i32);
             impl CompareResult {
+                /// The comparison did not result in a succesful ordering.
                 pub const Unknown: Self = Self(0i32);
+                /// The object value is lesser than the given value.
                 pub const Lesser: Self = Self(1i32);
+                /// The object value is equal to the given value.
                 pub const Equal: Self = Self(2i32);
+                /// The object value is greater than the given value.
                 pub const Greater: Self = Self(3i32);
             }
             impl windows_core::TypeKind for CompareResult {
@@ -1106,9 +1113,13 @@ pub mod Microsoft {
             /// Search behavior for composite catalogs.
             pub struct CompositeSearchBehavior(pub i32);
             impl CompositeSearchBehavior {
+                /// Search local catalogs only
                 pub const LocalCatalogs: Self = Self(0i32);
+                /// Search remote catalogs only, don't check local catalogs for InstalledVersion
                 pub const RemotePackagesFromRemoteCatalogs: Self = Self(1i32);
+                /// Search remote catalogs, and check local catalogs for InstalledVersion
                 pub const RemotePackagesFromAllCatalogs: Self = Self(2i32);
+                /// Search both local and remote catalogs.
                 pub const AllCatalogs: Self = Self(3i32);
             }
             impl windows_core::TypeKind for CompositeSearchBehavior {
@@ -2113,9 +2124,13 @@ pub mod Microsoft {
             /// The package installer elevation requirement.
             pub struct ElevationRequirement(pub i32);
             impl ElevationRequirement {
+                /// Elevation requirement not declared.
                 pub const Unknown: Self = Self(0i32);
+                /// Package installer requires elevation.
                 pub const ElevationRequired: Self = Self(1i32);
+                /// Package installer prohibits elevation.
                 pub const ElevationProhibited: Self = Self(2i32);
+                /// Package installer elevates self.
                 pub const ElevatesSelf: Self = Self(3i32);
             }
             impl windows_core::TypeKind for ElevationRequirement {
@@ -5476,10 +5491,15 @@ pub mod Microsoft {
             /** Progress object for the install
  estimate progress when the installer is running.*/
             pub struct InstallProgress {
+                /// State of the install
                 pub State: PackageInstallProgressState,
+                /// Number of bytes downloaded if known
                 pub BytesDownloaded: u64,
+                /// Number of bytes required if known
                 pub BytesRequired: u64,
+                /// Download percentage completed
                 pub DownloadProgress: f64,
+                /// Install percentage if known.
                 pub InstallationProgress: f64,
             }
             impl windows_core::TypeKind for InstallProgress {
@@ -5672,14 +5692,17 @@ pub mod Microsoft {
             /// The installed status type. The values need to match InstalledStatusType from winget/RepositorySearch.h.
             pub struct InstalledStatusType(pub u32);
             impl InstalledStatusType {
+                /// None is checked.
                 pub const None: Self = Self(0u32);
+                /// Check Apps and Features entry.
                 pub const AppsAndFeaturesEntry: Self = Self(1u32);
+                /// Check Apps and Features entry install location if applicable.
                 pub const AppsAndFeaturesEntryInstallLocation: Self = Self(2u32);
-                /** Below are helper values for calling CheckInstalledStatus as input.
- AppsAndFeaturesEntry related checks*/
+                /// Check Apps and Features entry install location with installed files if applicable.
                 pub const AppsAndFeaturesEntryInstallLocationFile: Self = Self(4u32);
+                /// Check default install location if applicable.
                 pub const DefaultInstallLocation: Self = Self(8u32);
-                /// DefaultInstallLocation related checks
+                /// Check default install location with installed files if applicable.
                 pub const DefaultInstallLocationFile: Self = Self(16u32);
                 pub const AllAppsAndFeaturesEntryChecks: Self = Self(7u32);
                 /// All checks
@@ -6190,7 +6213,9 @@ pub mod Microsoft {
             /// Result of a connection validation callback.
             pub struct PackageCatalogConnectionValidationResult(pub i32);
             impl PackageCatalogConnectionValidationResult {
+                /// The connection was accepted.
                 pub const Ok: Self = Self(0i32);
+                /// The connection was rejected because the certificate was not accepted.
                 pub const CertificateRejected: Self = Self(1i32);
             }
             impl windows_core::TypeKind for PackageCatalogConnectionValidationResult {
@@ -6355,7 +6380,9 @@ pub mod Microsoft {
             /// Defines the origin of the package catalog details.
             pub struct PackageCatalogOrigin(pub i32);
             impl PackageCatalogOrigin {
+                /// Predefined means it came as part of the Windows Package Manager package and cannot be removed.
                 pub const Predefined: Self = Self(0i32);
+                /// User means it was added by the user and could be removed.
                 pub const User: Self = Self(1i32);
             }
             impl windows_core::TypeKind for PackageCatalogOrigin {
@@ -6751,9 +6778,13 @@ pub mod Microsoft {
             #[derive(Clone, Copy, Debug, Default, PartialEq)]
             /// Progress object for the uninstall
             pub struct PackageDownloadProgress {
+                /// State of the download
                 pub State: PackageDownloadProgressState,
+                /// Number of bytes downloaded if known
                 pub BytesDownloaded: u64,
+                /// Number of bytes required if known
                 pub BytesRequired: u64,
+                /// Download percentage completed
                 pub DownloadProgress: f64,
             }
             impl windows_core::TypeKind for PackageDownloadProgress {
@@ -6769,8 +6800,13 @@ pub mod Microsoft {
             /// State of the download
             pub struct PackageDownloadProgressState(pub i32);
             impl PackageDownloadProgressState {
+                /** The download is queued but not yet active. Cancellation of the IAsyncOperationWithProgress in this
+ state will prevent the package from downloading.*/
                 pub const Queued: Self = Self(0i32);
+                /** The installer is downloading. Cancellation of the IAsyncOperationWithProgress in this state will
+ end the download.*/
                 pub const Downloading: Self = Self(1i32);
+                /// The operation has completed.
                 pub const Finished: Self = Self(2i32);
             }
             impl windows_core::TypeKind for PackageDownloadProgressState {
@@ -6802,8 +6838,12 @@ pub mod Microsoft {
             #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
             pub struct PackageInstallMode(pub i32);
             impl PackageInstallMode {
+                /// The default experience for the installer. Installer may show some UI.
                 pub const Default: Self = Self(0i32);
+                /** Runs the installer in silent mode. This suppresses the installer's UI to the extent
+ possible (installer may still show some required UI).*/
                 pub const Silent: Self = Self(1i32);
+                /// Runs the installer in interactive mode.
                 pub const Interactive: Self = Self(2i32);
             }
             impl windows_core::TypeKind for PackageInstallMode {
@@ -6819,10 +6859,19 @@ pub mod Microsoft {
             /// State of the install
             pub struct PackageInstallProgressState(pub i32);
             impl PackageInstallProgressState {
+                /** The install is queued but not yet active. Cancellation of the IAsyncOperationWithProgress in this
+ state will prevent the package from downloading or installing.*/
                 pub const Queued: Self = Self(0i32);
+                /** The installer is downloading. Cancellation of the IAsyncOperationWithProgress in this state will
+ end the download and prevent the package from installing.*/
                 pub const Downloading: Self = Self(1i32);
+                /** The install is in progress. Cancellation of the IAsyncOperationWithProgress in this state will not
+ stop the installation or the post install cleanup.*/
                 pub const Installing: Self = Self(2i32);
+                /** The installer has completed and cleanup actions are in progress. Cancellation of the
+ IAsyncOperationWithProgress in this state will not stop cleanup or roll back the install.*/
                 pub const PostInstall: Self = Self(3i32);
+                /// The operation has completed.
                 pub const Finished: Self = Self(4i32);
             }
             impl windows_core::TypeKind for PackageInstallProgressState {
@@ -6839,10 +6888,15 @@ pub mod Microsoft {
  supports the specified scope the Install call will fail with InstallResultStatus.NoApplicableInstallers*/
             pub struct PackageInstallScope(pub i32);
             impl PackageInstallScope {
+                /// An installer with any install scope is valid.
                 pub const Any: Self = Self(0i32);
+                /// Only User install scope installers are valid
                 pub const User: Self = Self(1i32);
+                /// Only System installers will be valid
                 pub const System: Self = Self(2i32);
+                /// Both User and Unknown install scope installers are valid
                 pub const UserOrUnknown: Self = Self(3i32);
+                /// Both System and Unknown install scope installers are valid
                 pub const SystemOrUnknown: Self = Self(4i32);
             }
             impl windows_core::TypeKind for PackageInstallScope {
@@ -7041,8 +7095,11 @@ pub mod Microsoft {
             /// The package installer scope.
             pub struct PackageInstallerScope(pub i32);
             impl PackageInstallerScope {
+                /// Scope not declared.
                 pub const Unknown: Self = Self(0i32);
+                /// User scope.
                 pub const User: Self = Self(1i32);
+                /// System scope.
                 pub const System: Self = Self(2i32);
             }
             impl windows_core::TypeKind for PackageInstallerScope {
@@ -7058,17 +7115,29 @@ pub mod Microsoft {
             /// The package installer type.
             pub struct PackageInstallerType(pub i32);
             impl PackageInstallerType {
+                /// Unknown type.
                 pub const Unknown: Self = Self(0i32);
+                /// Inno type.
                 pub const Inno: Self = Self(1i32);
+                /// Wix type.
                 pub const Wix: Self = Self(2i32);
+                /// Msi type.
                 pub const Msi: Self = Self(3i32);
+                /// Nullsoft type.
                 pub const Nullsoft: Self = Self(4i32);
+                /// Zip type.
                 pub const Zip: Self = Self(5i32);
+                /// Msix or Appx type.
                 pub const Msix: Self = Self(6i32);
+                /// Exe type.
                 pub const Exe: Self = Self(7i32);
+                /// Burn type.
                 pub const Burn: Self = Self(8i32);
+                /// MSStore type.
                 pub const MSStore: Self = Self(9i32);
+                /// Portable type.
                 pub const Portable: Self = Self(10i32);
+                /// Font type.
                 pub const Font: Self = Self(11i32);
             }
             impl windows_core::TypeKind for PackageInstallerType {
@@ -7819,8 +7888,12 @@ pub mod Microsoft {
             #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
             pub struct PackageRepairMode(pub i32);
             impl PackageRepairMode {
+                /// The default experience for the installer. Installer may show some UI.
                 pub const Default: Self = Self(0i32);
+                /** Runs the installer in silent mode. This suppresses the installer's UI to the extent
+ possible (installer may still show some required UI).*/
                 pub const Silent: Self = Self(1i32);
+                /// Runs the installer in interactive mode.
                 pub const Interactive: Self = Self(2i32);
             }
             impl windows_core::TypeKind for PackageRepairMode {
@@ -7836,9 +7909,16 @@ pub mod Microsoft {
             /// State of the repair
             pub struct PackageRepairProgressState(pub i32);
             impl PackageRepairProgressState {
+                /** The repair is queued but not yet active. Cancellation of the IAsyncOperationWithProgress in this
+ state will prevent the package from repairing.*/
                 pub const Queued: Self = Self(0i32);
+                /** The repair is in progress. Cancellation of the IAsyncOperationWithProgress in this state will not
+ stop the repair or the post repair steps.*/
                 pub const Repairing: Self = Self(1i32);
+                /** The repair has completed and cleanup actions are in progress. Cancellation of the
+ IAsyncOperationWithProgress in this state will not stop cleanup or roll back the repair.*/
                 pub const PostRepair: Self = Self(2i32);
+                /// The operation has completed.
                 pub const Finished: Self = Self(3i32);
             }
             impl windows_core::TypeKind for PackageRepairProgressState {
@@ -7853,8 +7933,11 @@ pub mod Microsoft {
             #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
             pub struct PackageRepairScope(pub i32);
             impl PackageRepairScope {
+                /// Use default repair behavior.
                 pub const Any: Self = Self(0i32);
+                /// Repair for current user. Currently only applicable to msix.
                 pub const User: Self = Self(1i32);
+                /// Repair for all users.
                 pub const System: Self = Self(2i32);
             }
             impl windows_core::TypeKind for PackageRepairScope {
@@ -7869,8 +7952,12 @@ pub mod Microsoft {
             #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
             pub struct PackageUninstallMode(pub i32);
             impl PackageUninstallMode {
+                /// The default experience for the installer. Installer may show some UI.
                 pub const Default: Self = Self(0i32);
+                /** Runs the installer in silent mode. This suppresses the installer's UI to the extent
+ possible (installer may still show some required UI).*/
                 pub const Silent: Self = Self(1i32);
+                /// Runs the installer in interactive mode.
                 pub const Interactive: Self = Self(2i32);
             }
             impl windows_core::TypeKind for PackageUninstallMode {
@@ -7886,9 +7973,16 @@ pub mod Microsoft {
             /// State of the uninstall
             pub struct PackageUninstallProgressState(pub i32);
             impl PackageUninstallProgressState {
+                /** The uninstall is queued but not yet active. Cancellation of the IAsyncOperationWithProgress in this
+ state will prevent the package from uninstalling.*/
                 pub const Queued: Self = Self(0i32);
+                /** The uninstall is in progress. Cancellation of the IAsyncOperationWithProgress in this state will not
+ stop the installation or the post uninstall steps.*/
                 pub const Uninstalling: Self = Self(1i32);
+                /** The uninstaller has completed and cleanup actions are in progress. Cancellation of the
+ IAsyncOperationWithProgress in this state will not stop cleanup or roll back the uninstall.*/
                 pub const PostUninstall: Self = Self(2i32);
+                /// The operation has completed.
                 pub const Finished: Self = Self(3i32);
             }
             impl windows_core::TypeKind for PackageUninstallProgressState {
@@ -7903,8 +7997,11 @@ pub mod Microsoft {
             #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
             pub struct PackageUninstallScope(pub i32);
             impl PackageUninstallScope {
+                /// Use default uninstall behavior.
                 pub const Any: Self = Self(0i32);
+                /// Uninstall for current user. Currently only applicable to msix.
                 pub const User: Self = Self(1i32);
+                /// Uninstall for all users. Currently only applicable to msix.
                 pub const System: Self = Self(2i32);
             }
             impl windows_core::TypeKind for PackageUninstallScope {
@@ -8240,11 +8337,17 @@ pub mod Microsoft {
             /// A metadata item of a package version.
             pub struct PackageVersionMetadataField(pub i32);
             impl PackageVersionMetadataField {
+                /// The InstallerType of an installed package
                 pub const InstallerType: Self = Self(0i32);
+                /// The Scope of an installed package
                 pub const InstalledScope: Self = Self(1i32);
+                /// The system path where the package is installed
                 pub const InstalledLocation: Self = Self(2i32);
+                /// The standard uninstall command; which may be interactive
                 pub const StandardUninstallCommand: Self = Self(3i32);
+                /// An uninstall command that should be non-interactive
                 pub const SilentUninstallCommand: Self = Self(4i32);
+                /// The publisher of the package
                 pub const PublisherDisplayName: Self = Self(5i32);
             }
             impl windows_core::TypeKind for PackageVersionMetadataField {
@@ -8834,7 +8937,9 @@ pub mod Microsoft {
             #[derive(Clone, Copy, Debug, Default, PartialEq)]
             /// Progress object for the repair
             pub struct RepairProgress {
+                /// State of the repair
                 pub State: PackageRepairProgressState,
+                /// Repair percentage if known.
                 pub RepairCompletionProgress: f64,
             }
             impl windows_core::TypeKind for RepairProgress {
@@ -9232,7 +9337,9 @@ pub mod Microsoft {
             #[derive(Clone, Copy, Debug, Default, PartialEq)]
             /// Progress object for the uninstall
             pub struct UninstallProgress {
+                /// State of the uninstall
                 pub State: PackageUninstallProgressState,
+                /// Uninstall percentage if known.
                 pub UninstallationProgress: f64,
             }
             impl windows_core::TypeKind for UninstallProgress {
@@ -9364,11 +9471,17 @@ pub mod Microsoft {
             /// The Windows platform type.
             pub struct WindowsPlatform(pub i32);
             impl WindowsPlatform {
+                /// An unknown platform
                 pub const Unknown: Self = Self(0i32);
+                /// Windows.Universal
                 pub const Universal: Self = Self(1i32);
+                /// Windows.Desktop
                 pub const Desktop: Self = Self(2i32);
+                /// Windows.IoT
                 pub const IoT: Self = Self(3i32);
+                /// Windows.Team
                 pub const Team: Self = Self(4i32);
+                /// Windows.Holographic
                 pub const Holographic: Self = Self(5i32);
             }
             impl windows_core::TypeKind for WindowsPlatform {
