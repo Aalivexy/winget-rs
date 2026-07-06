@@ -3,10 +3,9 @@
 version = 4
 
 [[package]]
-name = "bingen"
+name = "bindgen"
 version = "0.1.0"
 dependencies = [
- "windows",
  "windows-bindgen",
 ]
 
@@ -247,8 +246,6 @@ dependencies = [
  "windows-collections",
  "windows-core",
  "windows-future",
- "windows-result",
- "windows-strings",
 ]
 
 [[package]]

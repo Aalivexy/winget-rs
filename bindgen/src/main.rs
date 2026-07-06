@@ -1,17 +1,22 @@
 fn main() {
-    let winmd = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("Microsoft.Management.Deployment.winmd");
+    let out = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("..")
+        .join("src")
+        .join("bindings.rs");
 
     windows_bindgen::bindgen([
         "--in",
         "default",
         "--in",
-        winmd.to_str().expect("non-UTF-8 path for .winmd file"),
+        concat!(
+            env!("CARGO_MANIFEST_DIR"),
+            "\\Microsoft.Management.Deployment.winmd"
+        ),
         "--out",
-        "src/bindings.rs",
+        out.to_str().expect("non-UTF-8 path for output file"),
         "--filter",
         "Microsoft.Management.Deployment",
-        "--specific-deps",
+
         "--reference",
         "windows,skip-root,Windows.Foundation",
         "--reference",

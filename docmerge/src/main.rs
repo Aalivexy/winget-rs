@@ -10,7 +10,7 @@ fn main() {
     println!("Parsed {} doc entries from IDL", docs.len());
 
     let rust = fs::read_to_string("src/bindings.rs")
-        .expect("failed to read src/bindings.rs (run `cargo run -p bingen` first?)");
+        .expect("failed to read src/bindings.rs (run `cargo run -p bindgen` first?)");
     let result = inject(&rust, &docs);
     fs::write("src/bindings.rs", &result).expect("failed to write src/bindings.rs");
     println!("Written annotated bindings to src/bindings.rs");
